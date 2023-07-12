@@ -1,0 +1,48 @@
+# Ejemplo de docker compose para WordPress
+
+version: '3'
+services:
+  wordpress:
+    image: wordpress
+    container_name: servidor_wp
+    restart: always
+    environment:
+      - WORDPRESS_DB_NAME=db_wp
+      - WORDPRESS_DB_USER=user_wp
+      - WORDPRESS_DB_PASSWORD=pass_wp
+      - WORDPRESS_DB_HOST=servidor_mysql
+    ports:
+      - 80:80
+    depends_on:
+      - mysql
+    volumes:
+      - vol_wp:/var/www/html
+    networks:
+      - red_wp
+    
+  mysql:
+    image: mariadb
+    container_name: servidor_mysql
+    restart: always
+    environment:
+      - MYSQL_DATABASE=db_wp
+      - MYSQL_USER=user_wp
+      - MYSQL_PASSWORD=pass_wp
+      - MYSQL_RANDOM_ROOT_PASSWORD=pass-wp
+    # ports:
+    #   - 3306:3306
+    volumes:
+      - vol_mysql:/var/lib/mysql
+    networks:
+      - red_wp
+
+# Crear volumenes
+volumes:
+  vol_mysql:
+  vol_wp:
+
+networks:
+  red_wp:
+    driver: bridge
+    
+# docker-compose up -d ó especificar archivo

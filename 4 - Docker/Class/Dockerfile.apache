@@ -1,0 +1,10 @@
+FROM debian
+
+RUN apt-get update -y && apt install -y apache2
+
+COPY src/* /var/www/html
+
+# Ejecutar por defecto
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+
+# entrypoint, especifica instrucciones especiales para que ambos convivan (cmd)

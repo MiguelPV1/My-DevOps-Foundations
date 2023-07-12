@@ -1,0 +1,21 @@
+# FROM ubuntu # Donde parte la imagen que vamos a crear
+# Instalar nginx, etc. ...
+
+FROM nginx:alpine
+
+LABEL project=bootcamp
+
+# /usr/share/nginx/html => Donde se guardan archivos estaticos en nginx
+COPY src/* /usr/share/nginx/html
+
+# Buenas practicas: docker run --rm -i hadolint/hadolint < Dockerfile
+# Sin salida es que esta bien.
+
+# docker build -t nginx-web:1.0.0 . => crea la imagen
+
+# En docker hub (Distribuir imagen)
+# docker login
+# docker tag
+# docker push 
+
+# docker up -d --build
