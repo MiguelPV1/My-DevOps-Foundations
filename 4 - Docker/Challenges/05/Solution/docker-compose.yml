@@ -1,0 +1,27 @@
+version: '3'
+services:
+  service-flask-app:
+    image: devops_docker_ch05_api:1.0.0 
+    container_name: api
+    restart: always
+    ports:
+      - 8080:8000
+    networks:
+      - red_ch_05
+    
+  consumer:
+    image: devops_docker_ch05_consumer:1.0.0
+    container_name: consumer
+    restart: always
+    depends_on:
+      - service-flask-app
+    networks:
+      - red_ch_05
+
+networks:
+  red_ch_05:
+    driver: bridge
+
+# To resolve the DNS of a service:
+# - https://stackoverflow.com/questions/43579740/in-docker-compose-how-to-create-an-alias-link-to-localhost
+# - https://docs.docker.com/compose/networking/
