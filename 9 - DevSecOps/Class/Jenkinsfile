@@ -1,0 +1,120 @@
+// Se requiere tener Dokerfile para armar imagen
+pipeline {
+  agent any
+
+  environment {
+    AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    // AWS_SESSION_TOKEN = credentials('AWS_SESSION_TOKEN')
+
+    DOCKER_HUB_LOGIN = credentials('docker-hub')
+  }
+
+  stages {
+    stage('Horusec') {
+      agent {
+        docker {
+          image 'horuszup/horusec-cli:latest'
+          arg '-u root:root'
+        }
+      }
+
+      steps {
+        sh 'horusec start -p ./ --disable-docker="true" -o="json" -O="./report_horusec.json"'
+        // sh 'cat report_horusec.json'
+        stash name: 'report_horusec.json', includes:'report_horusec.json'
+      }
+    }
+
+    stage('Semgrep') {
+      agent {
+        docker {
+          image 'returntocorp/semgrep:latest'
+          arg '-u root:root'
+        }
+      }
+
+      steps {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          sh '''
+            semgrep ci --config=auto --json --output=report_semgrep.json
+            EXIT_CODE=$?
+
+            if [ "$EXIT_CODE" = "0" ] || if [ "$EXIT_CODE" = "1" ]
+            then
+              exit 0
+            else
+              exit $EXIT_CODE
+              #cat report_semgrep.json
+            fi
+          '''
+        }
+        // sh 'cat report_horusec.json'
+        stash name: 'report_semgrep.json', includes:'report_semgrep.json'
+      }
+    }
+
+    stage('Security Scannig (Trivy)') {
+      steps {
+        sh '''
+          IMAGE=trivy
+          docker build -t $IMAGE .
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.43.0
+          ./trivy image --format json --output report_trivy.json $IMAGE
+
+          # Subir reporte idealmente?
+          docker run rm -v $(pwd):/devsecops-pipeline -e "HOST=http://522316018:5985" -e "USERNAME=faraday" -e "PASSWORD=Admin1234"....???
+
+          # Repositorio de script de verificacion
+          ./script/trivy_scan.sh
+        '''
+        stash name: 'report_trivy.json', includes: 'report_trivy.json', useDefaultExcludes: false
+      }
+    }
+
+    // stage('Upload (Faraday)') {
+    //   agent {
+    //     docker {
+    //       image 'python:3.9.1'
+    //       args '-u root:root -v $WORKSPACE:/reports'
+    //     }
+    //   }
+    //   steps {
+    //     dir ("report"){ //Crear directorio para los reportes
+    //       unstash 'report_trivy.json'
+    //       sh '''
+    //         pip install -q faraday-cli #Skip vervosidad de instalacion
+    //         faraday-cli auth -f http://522316018:5985 -u faraday -p "Admin1234"
+    //         # Condifcion para si va existe nombre
+    //         faraday-cli workspace create devsecops-$BUILD_NUMBER
+    //         faraday-cli tool report -w devsecops-$BUILD_NUMBER
+    //       '''
+    //     }
+    //   }
+    // }
+
+    stage('Deploy'){
+      steps{
+        sh '''
+          echo 'depoy'
+        '''
+      }
+    }
+
+    stage('DAST-ZAP') {
+      agent {
+        docker {
+          image 'horuszup/horusec-cli:latest'
+          arg '-u root:root'
+        }
+      }
+
+      steps {
+        sh 'docker run --rm -v $(pwd):/zap/wrk/:rw --user root -t owasp/zap2docker-stable zap-baseline.py -t https://www.example.com -m
+        
+        -g gen.conf -r testreport.html'
+        stash name: 'testreport.html', includes: 'testreport.html', useDefaultExcludes: false
+      }
+    }
+  }
+}
