@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod-yaml
+  labels:
+    app: nginx-pod
+    version: v1
+    tier: frontend
+spec:
+  containers:
+  - name: myapp-nginx
+    image: nginx:alpine
+    resources:
+      limits:
+        memory: "60Mi"
+        cpu: "50m"
+    ports:
+      - containerPort: 80
