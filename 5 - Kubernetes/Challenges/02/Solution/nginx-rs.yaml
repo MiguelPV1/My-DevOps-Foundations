@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-rs-ch02
+
+  template:
+    metadata:
+      labels:
+        app: k8s-rs-ch02
+    spec:
+      containers:
+      - name: nginx-pod
+        image: roxsross12/k8s_test_web:latest
