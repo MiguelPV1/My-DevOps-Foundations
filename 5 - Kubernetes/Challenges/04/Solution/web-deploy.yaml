@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-ch04
+  labels:
+    app: nginx
+    type: frontend
+  annotations:
+    kubernetes.io/change-cause: ANNOTATION
+    # kubernetes.io/change-cause: "Primer despliegue. Desplegamos versión 1."
+    # kubernetes.io/change-cause: "Segundo despliegue. Actualizamos a la versión 2."
+    # kubernetes.io/change-cause: "Tercer despliegue. Actualizamos a la versión 3."
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: k8s-deploy-ch04
+
+  template:
+    metadata:
+      labels:
+        app: k8s-deploy-ch04
+    spec:
+      containers:
+      - name: nginx-pod
+        image: CONTAINER_IMAGE
+        # image: roxsross12/k8s_test_web:v1
+        # image: roxsross12/k8s_test_web:v2
+        # image: roxsross12/k8s_test_web:v3
+        ports:
+        - name: http-pod
+          containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-deploy-ch04-srv
+spec:
+  type: NodePort
+  ports:
+  - name: service-http
+    port: 80
+    targetPort: http-pod
+  selector:
+    app: k8s-deploy-ch04
