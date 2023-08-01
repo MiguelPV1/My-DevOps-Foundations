@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-consumer-ch05
+  labels:
+    app: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-deploy-consumer-ch05
+  
+  template:
+    metadata:
+      labels:
+        app: k8s-deploy-consumer-ch05
+    spec:
+      containers:
+      - name: consumer-pod
+        # image: localhost/devops_docker_ch05_consumer:1.0.0
+        # imagePullPolicy: Never
+        image: miguelpv/devops_docker_ch05_consumer:1.0.0
