@@ -117,5 +117,14 @@ sleep 1
 # exec /etc/init.d/apache2 restart
 systemctl reload apache2
 
+
+# >>> Comando Probar Conexion <<<
+#  mysql -h devops-ch01-db.c57jjegnlmn9.us-east-2.rds.amazonaws.com -u coffee  -p12345678-Aa
+
+# >>> CONEXION TO EC2-WINDOWS <<<
+# ec2-54-236-226-70.compute-1.amazonaws.com
+# Administrator
+# *AQU3P-SF.CFI;o-mnyTZgOXSjvc.8;l
+
 # >>> Nuevo Coffee <<<
 # INSERT INTO coffee.coffee (id, name, type, price, roast, country, image, review) VALUES (5, 'Irish Coffee', 'Mixed drink', 5.25, 'Medium', 'Irish', 'Images/Coffee/irish coffee.jpg', 'Caffeinated alcoholic drink consisting of Irish whiskey, hot coffee and sugar, which has been stirred and topped with cream (sometimes cream liqueur).')
