@@ -3,7 +3,7 @@
 ## CHALLENGE \#01
 
 ### Archivos
-En la carpeta *'Solution'* se encuentran los archivos [`06_ch01-local.sh`](../Solution/06_ch01-local.sh) y [`06_ch01-deploy.sh`](../Solution/06_ch01-deploy.sh), los cuales contienen el script desarrollado para instalar las herramientas necesarias que permitan correr la aplicación, tanto a nivel de frontend como de backend (los archivos de la aplicación se encuentran en la carpeta ['Coffee-App/'](../../Coffee-App/)) para la arquitectura que se muestra a continuación (la arquitectura fue creada desde cero por medio de la consola de AWS), la diferencia entre ambos archivos es que el primero es para desplegar la aplicación en un ambiente local con Linux, mientras que el segundo es para un ambiente en producción con Linux, en este caso en una instancia de EC2 de AWS.
+En la carpeta *'Solution'* se encuentran los archivos [`06_ch01-local.sh`](../Solution/06_ch01-local.sh) y [`06_ch01-deploy.sh`](../Solution/06_ch01-deploy.sh), los cuales contienen el script desarrollado para instalar las herramientas necesarias que permitan correr la aplicación (los archivos de la aplicación se encuentran en la carpeta ['web-app/'](../../Apps/web-app/)) para la arquitectura que se muestra a continuación (la arquitectura fue creada desde cero por medio de la consola de AWS), la diferencia entre ambos archivos es que el primero es para desplegar la aplicación en un ambiente local con Linux, mientras que el segundo es para un ambiente en producción con Linux, en este caso en una instancia de EC2 de AWS.
 <br /><br />
 ![](../Problem/Reto01.png)
 
